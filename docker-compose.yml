@@ -1,0 +1,31 @@
+version: "3.5"
+services:
+  mongo:
+    image: mongo:latest
+    container_name: swollen-mongo
+    networks:
+      - swollen
+    volumes:
+      - mongo:/data/db:rw
+    restart: always
+  express:
+    image: mongo-express:latest
+    container_name: swollen-express
+    networks:
+      - swollen
+    ports:
+      - 127.0.0.1:35000:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: swollen-mongo
+    depends_on:
+      - mongo
+    restart: always
+
+volumes:
+  mongo:
+    driver: local
+
+networks:
+  swollen:
+    name: swollen
+    driver: bridge
