@@ -3,27 +3,19 @@ services:
   mongo:
     image: mongo:latest
     container_name: swollen-mongo
+    ports:
+      - 127.0.0.1:5301:27017
     networks:
       - swollen
     volumes:
       - mongo:/data/db:rw
     restart: always
-  express:
-    image: mongo-express:latest
-    container_name: swollen-express
-    networks:
-      - swollen
-    ports:
-      - 127.0.0.1:35000:8081
-    environment:
-      ME_CONFIG_MONGODB_SERVER: swollen-mongo
-    depends_on:
-      - mongo
-    restart: always
   chroma:
     image: chromadb/chroma:latest
     container_name: swollen-chroma
     command: "--workers 1 --host 0.0.0.0 --port 8000 --proxy-headers --log-config chromadb/log_config.yml --timeout-keep-alive 30"
+    ports:
+      - 127.0.0.1:5302:8080
     volumes:
       - chroma:/chroma/chroma
     networks:
@@ -31,6 +23,18 @@ services:
     environment:
       IS_PERSISTENT: "TRUE"
       PERSIST_DIRECTORY: /chroma/chroma
+    restart: always
+  express:
+    image: mongo-express:latest
+    container_name: swollen-express
+    ports:
+      - 127.0.0.1:35001:8081
+    networks:
+      - swollen
+    environment:
+      ME_CONFIG_MONGODB_SERVER: swollen-mongo
+    depends_on:
+      - mongo
     restart: always
 
 volumes:
