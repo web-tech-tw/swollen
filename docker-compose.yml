@@ -8,8 +8,8 @@ services:
     networks:
       - swollen
     volumes:
+      - ./mongo_dump:/dump:rw
       - mongo:/data/db:rw
-      - ./dump:/dump:rw
     restart: always
   chroma:
     image: chromadb/chroma:latest
