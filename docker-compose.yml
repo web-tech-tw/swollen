@@ -9,6 +9,7 @@ services:
       - swollen
     volumes:
       - mongo:/data/db:rw
+      - ./dump:/dump:rw
     restart: always
   chroma:
     image: chromadb/chroma:latest
